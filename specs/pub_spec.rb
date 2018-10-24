@@ -22,7 +22,7 @@ class PubTest < Minitest::Test
 
     # @pub1 = Pub.new("The Red Lion", @drinks)
     @pub1 = Pub.new("The Red Lion", @stock)
-    @pub2 = Pub.new("The Red Lion", @stock2)
+    @pub2 = Pub.new("The Orange Lion", @stock2)
 
   end
 
@@ -102,7 +102,10 @@ class PubTest < Minitest::Test
   end
 
   def test_sell_item__when_not_in_stock
-
+    @pub2.sell_item(@joe, @beer)
+    @pub2.sell_item(@joe, @beer)
+    assert_equal(15, @pub2.check_till())
+    assert_equal(50, @joe.check_wallet())
   end
 
   def test_pub_stock_value

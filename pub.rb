@@ -36,6 +36,7 @@ class Pub
     if item.class == Drink
       return "You are too young" unless check_age(customer)
       return "You re too drunk" unless sober_enough?(customer)
+      return "We do not have that anymore" unless check_stock(item) > 0
       reduce_stock(item)
     end
     cash = customer.buy_item(item)
