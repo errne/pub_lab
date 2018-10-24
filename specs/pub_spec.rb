@@ -3,6 +3,7 @@ require('minitest/rg')
 require_relative('../drink')
 require_relative('../customer')
 require_relative('../pub')
+require_relative('../food')
 
 class PubTest < Minitest::Test
 
@@ -10,12 +11,19 @@ class PubTest < Minitest::Test
     @beer = Drink.new("Beer", 5, 4)
     @whiskey = Drink.new("Whiskey", 6, 8)
     @wine = Drink.new("Wine", 4, 6)
-    @drinks = [@beer, @whiskey, @wine]
+    @stock = {@beer => 5, @whiskey => 3, @wine => 6}
+    @stock2 = {@beer => 1, @whiskey => 3, @wine => 6}
+    # @drinks = [@beer, @whiskey, @wine]
+
+    @pizza = Food.new("Pizza", 9, 3)
 
     @joe = Customer.new("Joe", 19, 55)
     @jen = Customer.new("Jen", 16, 99)
 
-    @pub1 = Pub.new("The Red Lion", @drinks)
+    # @pub1 = Pub.new("The Red Lion", @drinks)
+    @pub1 = Pub.new("The Red Lion", @stock)
+    @pub2 = Pub.new("The Red Lion", @stock2)
+
   end
 
   def test_pub_has_name
@@ -23,7 +31,12 @@ class PubTest < Minitest::Test
   end
 
   def test_pub_has_menu
-    assert_equal([@beer, @whiskey, @wine], @pub1.drinks)
+    # assert_equal([@beer, @whiskey, @wine], @pub1.drinks)
+    assert_equal({@beer => 5, @whiskey => 3, @wine => 6}, @pub1.drinks)
+  end
+
+  def test_chech_item_stock_level
+    assert_equal(5, @pub1.check_stock(@beer))
   end
 
   def test_can_check_till
@@ -55,6 +68,13 @@ class PubTest < Minitest::Test
     @pub1.sell_item(@joe, @beer)
     assert_equal(15, @pub1.check_till())
     assert_equal(50, @joe.check_wallet())
+    assert_equal(4, @pub1.check_stock(@beer))
+  end
+
+  def test_pub_can_sell_item__food
+    @pub1.sell_item(@joe, @pizza)
+    assert_equal(19, @pub1.check_till())
+    assert_equal(46, @joe.check_wallet())
   end
 
   def test_pub_can_sell_item__underage
@@ -71,13 +91,22 @@ class PubTest < Minitest::Test
     assert_equal(28, @pub1.check_till())
   end
 
-  def test_pub_can_sell_item__too_drunk
+  def test_pub_can_sell_item__too_drunk_buys_pizza
     @pub1.sell_item(@joe, @whiskey)
     @pub1.sell_item(@joe, @whiskey)
     @pub1.sell_item(@joe, @whiskey)
     @pub1.sell_item(@joe, @whiskey)
-    assert_equal(28, @pub1.check_till())
+    @pub1.sell_item(@joe, @pizza)
+    assert_equal(37, @pub1.check_till())
+    assert_equal(28, @joe.check_wallet())
+  end
 
+  def test_sell_item__when_not_in_stock
+
+  end
+
+  def test_pub_stock_value
+    assert_equal(67, @pub1.evaluate_stock())
   end
 
 

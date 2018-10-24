@@ -16,6 +16,10 @@ class Pub
     @till += cash
   end
 
+  def check_stock(item)
+    return drinks[item]
+  end
+
   def check_age(customer)
     return customer.show_id() >= 18
   end
@@ -24,11 +28,26 @@ class Pub
     return customer.drunkeness < 20
   end
 
+  def reduce_stock(item)
+    drinks[item] -= 1
+  end
+
   def sell_item(customer, item)
-    return "You are too young" unless check_age(customer)
-    return "You re too drunk" unless sober_enough?(customer)
+    if item.class == Drink
+      return "You are too young" unless check_age(customer)
+      return "You re too drunk" unless sober_enough?(customer)
+      reduce_stock(item)
+    end
     cash = customer.buy_item(item)
     add_money_to_till(cash)
+  end
+
+  def evaluate_stock()
+    total_value = 0
+    drinks.each{|drink, amount|
+      total_value += (amount*drink.price)
+    }
+    return total_value
   end
 
 end

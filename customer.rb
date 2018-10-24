@@ -20,9 +20,14 @@ class Customer
     @drunkeness += drink.alcohol_level
   end
 
+  def eat_food(item)
+    @drunkeness -= item.rejuvenation_level
+  end
+
   def buy_item(item)
     @wallet -= item.price
-    drink_drink(item)
+    drink_drink(item) if item.class == Drink
+    eat_food(item) if item.class == Food
     return item.price
   end
 
