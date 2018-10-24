@@ -22,6 +22,7 @@ class Customer
 
   def buy_item(item)
     @wallet -= item.price
+    drink_drink(item)
     return item.price
   end
 

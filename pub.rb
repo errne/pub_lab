@@ -12,16 +12,23 @@ class Pub
     return @till
   end
 
-  def add_money_to_till(item)
-    @till += item.price
+  def add_money_to_till(cash)
+    @till += cash
   end
 
   def check_age(customer)
     return customer.show_id() >= 18
   end
 
-  def check_drunkeness(customer)
+  def sober_enough?(customer)
     return customer.drunkeness < 20
   end
-  
+
+  def sell_item(customer, item)
+    return "You are too young" unless check_age(customer)
+    return "You re too drunk" unless sober_enough?(customer)
+    cash = customer.buy_item(item)
+    add_money_to_till(cash)
+  end
+
 end
